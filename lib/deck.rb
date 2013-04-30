@@ -4,7 +4,7 @@ require_relative 'card'
 
 class Deck
 
-	def self.all_cards
+	def Deck.all_cards
 		suits = Card.suits
 		values = Card.values
 		cards = []
@@ -20,7 +20,7 @@ class Deck
 
 	attr_reader :cards
 
-	def initialize(cards = self.all_cards)
+	def initialize(cards = Deck.all_cards)
 		@cards = cards
 	end
 

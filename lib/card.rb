@@ -63,7 +63,7 @@ class Card
 	end
 
 	def self.values
-		VALUE_STRINGS.values
+		VALUE_STRINGS.keys
 	end
 
 	attr_reader :suit, :value
