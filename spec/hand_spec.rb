@@ -13,9 +13,15 @@ describe Hand do
 							}
 	let(:unordered) {[Card.new(:hearts, :seven),
 								Card.new(:hearts, :king),
-								Card.new(:hearts, :seven),
+								Card.new(:diamonds, :seven),
 								Card.new(:hearts, :ace),
 								Card.new(:hearts, :two)]
+							}
+	let(:unordered_straight) {[Card.new(:hearts, :seven),
+								Card.new(:hearts, :five),
+								Card.new(:diamonds, :eight),
+								Card.new(:hearts, :nine),
+								Card.new(:hearts, :six)]
 							}
 	let(:two_pair) {[Card.new(:hearts, :two),
 								Card.new(:diamonds, :two),
@@ -41,7 +47,30 @@ describe Hand do
 								Card.new(:clubs, :four),
 								Card.new(:hearts, :five)]
 							}
-
+	let(:four_kind) {[Card.new(:hearts, :ace),
+								Card.new(:diamonds, :ace),
+								Card.new(:hearts, :three),
+								Card.new(:clubs, :ace),
+								Card.new(:spades, :ace)]
+							}
+	let(:full_house) {[Card.new(:hearts, :ace),
+								Card.new(:diamonds, :three),
+								Card.new(:hearts, :three),
+								Card.new(:clubs, :ace),
+								Card.new(:spades, :ace)]
+							}
+	let(:three_kind) {[Card.new(:hearts, :ace),
+								Card.new(:diamonds, :ace),
+								Card.new(:hearts, :three),
+								Card.new(:clubs, :four),
+								Card.new(:spades, :ace)]
+							}
+	let(:pair) {[Card.new(:hearts, :ace),
+								Card.new(:diamonds, :ace),
+								Card.new(:hearts, :three),
+								Card.new(:clubs, :six),
+								Card.new(:spades, :seven)]
+							}
 
 	describe "#initialize" do
 
@@ -87,18 +116,69 @@ describe Hand do
 			hand = Hand.new(ace_low_straight)
 			hand.straight?.should be_true
 		end
+
+		it "finds a straight in an unordered hand" do
+			hand = Hand.new(unordered_straight)
+			hand.straight?.should be_true
+		end
+
 	end
 
 	describe "#order!" do
-
 		it "sorts an unordered hand by values" do
 			hand = Hand.new(unordered)
 			hand.order!
 			hand.cards.map {|card| card.value}.should == [:two, :seven, :seven, :king, :ace]
 		end
-
 	end
 
+	describe "#flush?" do
+		it "returns true if hand is flush" do
+			hand = Hand.new(flush)
+			hand.flush?.should be_true
+		end
+
+		it "returns false if otherwise" do
+			hand = Hand.new(unordered)
+			hand.flush?.should be_false
+		end
+	end
+
+	describe "#four_kind?" do
+		it "correctly identifies four of a kind" do
+			hand = Hand.new(four_kind)
+			hand.four_kind?.should be_true
+		end
+
+		it "returns false otherwise" do
+			hand = Hand.new(flush)
+			hand.four_kind?.should be_false
+		end
+	end
+
+	describe "#full_house?" do
+		it "correctly identifies a full house" do
+			hand = Hand.new(full_house)
+			hand.full_house?.should be_true
+		end
+
+		it "returns false otherwise" do
+			hand = Hand.new(flush)
+			hand.full_house?.should be_false
+		end
+	end
+
+	describe "#three_kind?" do
+		it "correctly identifies three of a kind" do
+			hand = Hand.new(three_kind)
+			hand.three_kind?.should be_true
+		end
+
+		it "returns false otherwise" do
+			hand = Hand.new(pair)
+			hand.three_kind?.should be_false
+		end
+	end
 
 
 end

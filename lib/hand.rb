@@ -69,22 +69,67 @@ class Hand
 		end
 	end
 
+	def values
+		@cards.map {|card| card.value}
+	end
+
+
+	# METHODS TO CHECK HAND TYPES
+	# private
+
+
+	def low_ace_straight?
+		vals = self.values
+		if vals[-2] == :five && vals[-1] == :ace
+			low_ace = vals.unshift(vals.pop)
+			if low_ace == [:ace] + CARD_ORDER[0..3]
+				return true
+			else
+				return false
+			end
+		end
+	end
 
 	def straight?
-		#assumes hand is ordered
- 	 	values = @cards.map {|card| card.value}
-		# check for low-ace straight
-		return true if values == [:ace] + CARD_ORDER[0..3]
+		self.order!
+
+		return true if low_ace_straight?
 
 		i = 0
 		# CARD_ORDER
 		while i + 5 <= 13
-			if values == CARD_ORDER[i..i+4]
+			if self.values == CARD_ORDER[i..i+4]
 				return true
 			end
 			i += 1
 		end
 		false
 	end
+
+	def flush?
+		self.suit_counts.values.include?(5)
+	end
+
+	def four_kind?
+		self.value_counts.values.include?(4)
+	end
+
+	def three_kind?
+		self.value_counts.values.include?(3)
+	end
+
+	def pair?
+		self.value_counts.values.include?(2)
+	end
+
+	def full_house?
+		three_kind? && pair?
+	end
+
+	def two_pair?
+		pairs = self.value_counts.values.select {|count| count == 2}
+		pairs.size == 2
+	end
+
 
 end
