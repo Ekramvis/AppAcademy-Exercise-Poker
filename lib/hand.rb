@@ -1,40 +1,11 @@
 # -*- coding: utf-8 -*-
 
 require_relative 'deck'
+require_relative 'card_constants'
 
 class Hand
 
-	CARD_ORDER = [
-    :two,
-    :three,
-    :four,
-    :five,
-    :six,
-    :seven,
-    :eight,
-    :nine,
-    :ten,
-    :jack,
-    :queen,
-    :king,
-    :ace
-	]
-
-  VALUE_RANKS = {
-    :two   => 2,
-    :three => 3,
-    :four  => 4,
-    :five  => 5,
-    :six   => 6,
-    :seven => 7,
-    :eight => 8,
-    :nine  => 9,
-    :ten   => 10,
-    :jack  => 11,
-    :queen => 12,
-    :king  => 13,
-    :ace   => 14
-  }
+	include CardConstants
 
 
 	attr_accessor :cards
@@ -72,6 +43,11 @@ class Hand
 	def values
 		@cards.map {|card| card.value}
 	end
+
+	def compare(other_hand)
+		HAND_RANKS.index(self.hand_value) <=> HAND_RANKS.index(other_hand.hand_value)
+	end
+
 
 
 	# METHODS TO CHECK HAND TYPES
@@ -130,6 +106,34 @@ class Hand
 		pairs = self.value_counts.values.select {|count| count == 2}
 		pairs.size == 2
 	end
+
+
+	# switch to check highest value in hand
+
+	def hand_value
+		if straight? && flush? && self.values[-1] == :ace
+			return :rf
+		elsif straight? && flush?
+			return :sf
+		elsif flush?
+			return :fl
+		elsif straight?
+			return :st
+		elsif four_kind?
+			return :fk
+		elsif full_house?
+			return :fh
+		elsif three_kind?
+			return :tk
+		elsif two_pair?
+			return :tp
+		elsif pair?
+			return :op
+		else
+			return :nh
+		end
+	end
+
 
 
 end

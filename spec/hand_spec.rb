@@ -71,7 +71,24 @@ describe Hand do
 								Card.new(:clubs, :six),
 								Card.new(:spades, :seven)]
 							}
-
+	let(:royal_flush) {[Card.new(:hearts, :ace),
+								Card.new(:hearts, :king),
+								Card.new(:hearts, :jack),
+								Card.new(:hearts, :queen),
+								Card.new(:hearts, :ten)]
+							}
+	let(:straight_flush) {[Card.new(:hearts, :nine),
+								Card.new(:hearts, :king),
+								Card.new(:hearts, :jack),
+								Card.new(:hearts, :queen),
+								Card.new(:hearts, :ten)]
+							}
+	let(:no_hand) {[Card.new(:hearts, :nine),
+								Card.new(:hearts, :king),
+								Card.new(:spades, :two),
+								Card.new(:hearts, :queen),
+								Card.new(:hearts, :ten)]
+							}
 	describe "#initialize" do
 
 		it "should initialize with five cards" do
@@ -180,5 +197,76 @@ describe Hand do
 		end
 	end
 
+	describe "#hand_value" do
+		it "finds a royal flush in a hand" do
+			hand = Hand.new(royal_flush)
+			hand.hand_value.should == :rf
+		end
+
+		it "finds a straight flush in a hand" do
+			hand = Hand.new(straight_flush)
+			hand.hand_value.should == :sf
+		end
+
+		it "finds a flush in a hand" do
+			hand = Hand.new(flush)
+			hand.hand_value.should == :fl
+		end
+
+		it "finds a straight in a hand" do
+			hand = Hand.new(straight)
+			hand.hand_value.should == :st
+		end
+
+		it "finds a four of a kind" do
+			hand = Hand.new(four_kind)
+			hand.hand_value.should == :fk
+		end
+
+		it "finds a full_house" do
+			hand = Hand.new(full_house)
+			hand.hand_value.should == :fh
+		end
+
+		it "finds a three of a kind" do
+			hand = Hand.new(three_kind)
+			hand.hand_value.should == :tk
+		end
+
+		it "finds two pair" do
+			hand = Hand.new(two_pair)
+			hand.hand_value.should == :tp
+		end
+
+		it "finds a pair" do
+			hand = Hand.new(pair)
+			hand.hand_value.should == :op
+		end
+
+		it "tells us if no hand is present" do
+			hand = Hand.new(no_hand)
+			hand.hand_value.should == :nh
+		end
+	end
+
+	describe "#compare_hand" do
+		it "returns 1 if your hand is better" do
+			hand = Hand.new(flush)
+			other_hand = Hand.new(two_pair)
+			hand.compare(other_hand).should == 1
+		end
+
+		it "returns -1 if your hand is worse" do
+			hand = Hand.new(pair)
+			other_hand = Hand.new(full_house)
+			hand.compare(other_hand).should == -1
+		end
+
+		it "returns 0 if hands are of same rank" do
+			hand = Hand.new(royal_flush)
+			other_hand = Hand.new(royal_flush)
+			hand.compare(other_hand).should == 0
+		end
+	end
 
 end
