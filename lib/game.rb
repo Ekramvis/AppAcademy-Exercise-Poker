@@ -6,7 +6,7 @@ require_relative 'card'
 class Game
 	attr_accessor :players, :pot
 
-	def initialize(p1, p2)
+	def initialize(p1 = Player.new("Angelo",100), p2 = Player.new("Mikey",100))
 		@players = [p1, p2]
 	end
 
@@ -18,7 +18,7 @@ class Game
 				@pot += player.ante(ante)
 			else
 				@players.delete(player)
-				#puts "Get the hell out, pauper #{player.name}!"
+				#puts "Get the hell out, pauper #{player.name}"
 			end
 		end
 	end
